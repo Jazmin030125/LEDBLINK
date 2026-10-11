@@ -1,0 +1,87 @@
+MODO BCM
+
+#!/usr/bin/env python3
+import RPi.GPIO as GPIO
+import time
+LED_PIN = 18  # GPIO 18 (pin físico 12)
+try:
+    # 1. Configurar modo de numeración BCM
+    GPIO.setmode(GPIO.BCM)
+    # 2. Desactivar advertencias (opcional)
+    GPIO.setwarnings(False)
+    # 3. Configurar pin como salida
+    GPIO.setup(LED_PIN, GPIO.OUT, initial=GPIO.LOW)
+    print("Control de LED iniciado (Modo BCM)")
+    print(f"Usando GPIO {LED_PIN} (Pin físico 12)")
+    print("Presiona Ctrl+C para salir")
+    # 4. Loop principal - Parpadeo del LED
+    while True:
+        # Encender LED (HIGH = 3.3V)
+        GPIO.output(LED_PIN, GPIO.HIGH)
+        print("LED ENCENDIDO")
+        time.sleep(1)
+        # Apagar LED (LOW = 0V)
+        GPIO.output(LED_PIN, GPIO.LOW)
+        print("LED APAGADO")
+        time.sleep(1)
+except KeyboardInterrupt:
+    print("\nPrograma interrumpido por el usuario")
+finally:
+    # 5. Limpieza - Restaurar pines a estado seguro
+    GPIO.cleanup()
+    print("GPIO limpiado. Programa finalizado.")
+
+
+
+
+
+MODO BOARD
+
+#!/usr/bin/env python3
+"""
+Ejemplo de control LED usando modo BOARD (numeración física)
+Pin 12 corresponde a GPIO 18 en modo BCM
+"""
+
+import RPi.GPIO as GPIO
+import time
+
+# Configuración
+LED_PIN = 12  # Pin físico 12 (GPIO 18 en BCM)
+
+try:
+    # 1. Configurar modo de numeración BOARD
+    GPIO.setmode(GPIO.BOARD)
+   
+    # 2. Desactivar advertencias
+    GPIO.setwarnings(False)
+   
+    # 3. Configurar pin como salida con valor inicial LOW
+    GPIO.setup(LED_PIN, GPIO.OUT, initial=GPIO.LOW)
+   
+    print("Control de LED iniciado (Modo BOARD)")
+    print(f"Usando Pin físico {LED_PIN}")
+    print("Presiona Ctrl+C para salir")
+   
+    # 4. Loop principal con diferentes patrones
+    contador = 0
+    while contador < 10:  # 10 ciclos
+        # Parpadeo rápido (3 veces)
+        for _ in range(3):
+            GPIO.output(LED_PIN, GPIO.HIGH)
+            time.sleep(0.2)
+            GPIO.output(LED_PIN, GPIO.LOW)
+            time.sleep(0.2)
+       
+        # Pausa larga
+        time.sleep(1)
+        contador += 1
+        print(f"Ciclo {contador}/10 completado")
+
+except KeyboardInterrupt:
+    print("\nPrograma interrumpido")
+
+finally:
+    # Limpieza obligatoria
+    GPIO.cleanup()
+    print("Sistema apagado correctamente")
